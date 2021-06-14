@@ -1,24 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
+import { IProduct } from './product';
 
 @Component({
     selector: 'pm-product-list',
-    templateUrl: 'product-list.component.html'
+    templateUrl: 'product-list.component.html',
+    styleUrls: ['./product-list.component.css']
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnInit {
     pageTitle = 'Products List';
     imageWidth = 50;
     imageMargin = 2;
     showImage = false;
 
-    products: any[] = [
+    private _listFilter = ' ';
+    get listFilter(): string {
+      return this._listFilter;
+    }
+
+    set listFilter(value: string) {
+      this._listFilter = value;
+      this.filteredProducts = this.products.filter(p => p.productName.toLowerCase().includes(value.toLowerCase()));
+    }
+
+    filteredProducts: IProduct[] = [];
+    products: IProduct[] = [
     {
       productId: 1,
       productName: 'Leaf Rake',
-      productCode: 'GDN-0011',
+      productCode: 'GDN-0011-32',
       releaseDate: 'March 19, 2019',
       description: 'Leaf rake with 48-inch wooden handle.',
       price: 19.95,
-      starRating: 3.2,
+      starRating: 5,
       imageUrl: 'assets/images/leaf_rake.png'
     },
     {
@@ -58,11 +71,16 @@ export class ProductListComponent {
       releaseDate: 'October 15, 2018',
       description: 'Standard two-button video game controller',
       price: 35.95,
-      starRating: 4.6,
+      starRating: 1,
       imageUrl: 'assets/images/xbox-controller.png'
     }];
 
     toogleImage(): void {
       this.showImage = !this.showImage;
     }
+
+    ngOnInit(): void {
+      console.log('OnInit started');
+      this.listFilter = '';
+   }
 }
